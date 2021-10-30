@@ -17,11 +17,13 @@ func NewRedisAuthHandler(ctx context.Context, redis *redis.Client, clientKeyPref
 		clientKeyPrefix = "mqtt:emqx:user:"
 	}
 
-	handler := new(RedisAuthHandler)
-	handler.ctx = ctx
-	handler.redis = redis
-	handler.clientKeyPrefix = clientKeyPrefix
-	return handler
+	return &RedisAuthHandler{
+		redis:           redis,
+		clientKeyPrefix: clientKeyPrefix,
+		AuthHandlerAbstract: AuthHandlerAbstract{
+			ctx: ctx,
+		},
+	}
 }
 
 func (authHandler *RedisAuthHandler) Set(entity *auth.AuthEntity) {

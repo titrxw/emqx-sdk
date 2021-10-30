@@ -1,1 +1,4 @@
-package Kernel
+package kernel
+
+type Client struct {
+}

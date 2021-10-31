@@ -10,16 +10,12 @@ import (
 
 type MnesiaAuthHandler struct {
 	AuthHandlerAbstract
-	host      string
-	appId     string
-	appSecret string
+	host string
 }
 
-func NewMnesiaAuthHandler(ctx context.Context, host string, appId string, appSecret string) *MnesiaAuthHandler {
+func NewMnesiaAuthHandler(ctx context.Context, host string) *MnesiaAuthHandler {
 	return &MnesiaAuthHandler{
-		host:      host,
-		appId:     appId,
-		appSecret: appSecret,
+		host: host,
 		AuthHandlerAbstract: AuthHandlerAbstract{
 			ctx: ctx,
 		},

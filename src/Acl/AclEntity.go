@@ -16,70 +16,69 @@ const (
 )
 
 type AclEntity struct {
-	userName string
-	clientId string
-	ipaddr   string
-	topic    string
-	action   ACL_ACTION
-	access   ACL_ACCESS
+	clientName string
+	ipaddr     string
+	topic      string
+	action     ACL_ACTION
+	access     ACL_ACCESS
 }
 
-func (aclEntity *AclEntity) setUserName(userName string) {
-	aclEntity.userName = userName
+func (aclEntity *AclEntity) SetClientName(clientName string) {
+	aclEntity.clientName = clientName
 }
 
-func (aclEntity *AclEntity) getUserName() string {
-	return aclEntity.userName
+func (aclEntity *AclEntity) GetClientName() string {
+	return aclEntity.clientName
 }
 
-func (aclEntity *AclEntity) setClientId(clientId string) {
-	aclEntity.clientId = clientId
-}
-
-func (aclEntity *AclEntity) getClientId() string {
-	return aclEntity.clientId
-}
-
-func (aclEntity *AclEntity) setIpaddr(ipaddr string) {
+func (aclEntity *AclEntity) SetIpaddr(ipaddr string) {
 	aclEntity.ipaddr = ipaddr
 }
 
-func (aclEntity *AclEntity) getIpaddr() string {
+func (aclEntity *AclEntity) GetIpaddr() string {
 	return aclEntity.ipaddr
 }
 
-func (aclEntity *AclEntity) setTopic(topic string) {
+func (aclEntity *AclEntity) SetTopic(topic string) {
 	aclEntity.topic = topic
 }
 
-func (aclEntity *AclEntity) getTopic() string {
+func (aclEntity *AclEntity) GetTopic() string {
 	return aclEntity.topic
 }
 
-func (aclEntity *AclEntity) setActionPub() {
-	aclEntity.action = ACTION_PUB
+func (aclEntity *AclEntity) SetAction(action ACL_ACTION) {
+	aclEntity.action = action
 }
 
-func (aclEntity *AclEntity) setActionSub() {
-	aclEntity.action = ACTION_SUB
+func (aclEntity *AclEntity) SetActionPub() {
+	aclEntity.SetAction(ACTION_PUB)
 }
 
-func (aclEntity *AclEntity) setActionPubSub() {
-	aclEntity.action = ACTION_PUBSUB
+func (aclEntity *AclEntity) SetActionSub() {
+	aclEntity.SetAction(ACTION_SUB)
 }
 
-func (aclEntity *AclEntity) getAction() ACL_ACTION {
+func (aclEntity *AclEntity) SetActionPubSub() {
+	aclEntity.SetAction(ACTION_PUBSUB)
+}
+
+func (aclEntity *AclEntity) GetAction() ACL_ACTION {
 	return aclEntity.action
 }
 
-func (aclEntity *AclEntity) setAccessAllow() {
-	aclEntity.access = ACCESS_ALLOW
+func (aclEntity *AclEntity) SetAccess(access ACL_ACCESS) {
+	aclEntity.access = access
 }
 
-func (aclEntity *AclEntity) setAccessDeny() {
-	aclEntity.access = ACCESS_DENY
+func (aclEntity *AclEntity) SetAccessAllow() {
+	aclEntity.SetAccess(ACCESS_ALLOW)
 }
 
-func (aclEntity *AclEntity) getAccess() ACL_ACCESS {
+func (aclEntity *AclEntity) SetAccessDeny() {
+	aclEntity.SetAccess(ACCESS_DENY)
+}
+
+func (aclEntity *AclEntity) GetAccess() ACL_ACCESS {
 	return aclEntity.access
 }

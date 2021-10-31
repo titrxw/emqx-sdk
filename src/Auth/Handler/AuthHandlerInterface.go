@@ -5,6 +5,7 @@ import (
 )
 
 type AuthHandlerInterface interface {
-	Set(entity *auth.AuthEntity)
-	Validate(clientName string, password string) bool
+	Set(entity *auth.AuthEntity, useClientIdType bool) (bool, error)
+	Validate(entity *auth.AuthEntity, useClientIdType bool) (bool, error)
+	Delete(entity *auth.AuthEntity, useClientIdType bool) (bool, error)
 }

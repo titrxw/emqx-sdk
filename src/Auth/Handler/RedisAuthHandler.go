@@ -26,28 +26,27 @@ func NewRedisAuthHandler(ctx context.Context, redis *redis.Client, clientKeyPref
 	}
 }
 
-func (authHandler *RedisAuthHandler) Set(entity *auth.AuthEntity) {
-	var err error
+func (authHandler *RedisAuthHandler) Set(entity *auth.AuthEntity, useClientIdType bool) (bool, error) {
+	var boolCmd *redis.BoolCmd
 	if entity.GetSalt() == "" {
-		err = authHandler.redis.HMSet(authHandler.ctx, authHandler.clientKeyPrefix+entity.GetClientName(), "password", entity.GetPassword()).Err()
+		boolCmd = authHandler.redis.HMSet(authHandler.ctx, authHandler.clientKeyPrefix+entity.GetClientName(), "password", entity.GetPassword())
 	} else {
-		err = authHandler.redis.HMSet(authHandler.ctx, authHandler.clientKeyPrefix+entity.GetClientName(), "password", entity.GetPassword(), "salt", entity.GetSalt()).Err()
+		boolCmd = authHandler.redis.HMSet(authHandler.ctx, authHandler.clientKeyPrefix+entity.GetClientName(), "password", entity.GetPassword(), "salt", entity.GetSalt())
 	}
 
-	if err != nil {
-		panic(err)
-	}
+	return boolCmd.Val(), boolCmd.Err()
 }
 
-func (authHandler *RedisAuthHandler) Validate(clientName string, password string) bool {
-	sliceCmd := authHandler.redis.HMGet(authHandler.ctx, authHandler.clientKeyPrefix+clientName, "password")
+func (authHandler *RedisAuthHandler) Validate(entity *auth.AuthEntity, useClientIdType bool) (bool, error) {
+	sliceCmd := authHandler.redis.HMGet(authHandler.ctx, authHandler.clientKeyPrefix+entity.GetClientName(), "password")
 	if sliceCmd.Err() != nil {
-		panic(sliceCmd.Err())
+		return false, sliceCmd.Err()
 	}
 
-	if sliceCmd.Val()[0] == password {
-		return true
-	}
+	return sliceCmd.Val()[0] == entity.GetPassword(), nil
+}
 
-	return false
+func (authHandler *RedisAuthHandler) Delete(entity *auth.AuthEntity, useClientIdType bool) (bool, error) {
+	intCmd := authHandler.redis.HDel(authHandler.ctx, authHandler.clientKeyPrefix+entity.GetClientName())
+	return true, intCmd.Err()
 }

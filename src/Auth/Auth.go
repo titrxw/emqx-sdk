@@ -35,5 +35,5 @@ func (auth *Auth) Validate(entity *AuthEntity, useClientIdType bool) (bool, erro
 }
 
 func (auth *Auth) Delete(entity *AuthEntity, useClientIdType bool) (bool, error) {
-	return auth.handler.Set(entity, useClientIdType)
+	return auth.handler.Delete(entity, useClientIdType)
 }

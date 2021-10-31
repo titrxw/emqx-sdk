@@ -32,7 +32,7 @@ func (authHandler *MnesiaAuthHandler) Set(entity *auth.AuthEntity, useClientIdTy
 		"Accept": "application/json",
 	}
 	param := req.Param{
-		"clientid": entity.GetClientName(),
+		authHandler.getAuthClientKeyName(useClientIdType): entity.GetClientName(),
 		"password": entity.GetPassword(),
 	}
 	response, err := client.Post(url, header, param)

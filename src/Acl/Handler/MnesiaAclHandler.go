@@ -22,13 +22,13 @@ func NewMnesiaAclHandler(ctx context.Context, host string) *MnesiaAclHandler {
 }
 
 func (this *MnesiaAclHandler) Set(entity *acl.AclEntity, useClientIdType bool) (bool, error) {
-	url := this.host + "api/v4/acl" + this.getAuthClientKeyName(useClientIdType)
+	url := this.host + "api/v4/acl" + this.getAclClientKeyName(useClientIdType)
 	client := new(Kernel.Client)
 
 	var err error
 	if entity.GetClientName() != "" {
 		_, err = client.Post(url, req.BodyJSON(map[string]string{
-			this.getAuthClientKeyName(useClientIdType): entity.GetClientName(),
+			this.getAclClientKeyName(useClientIdType): entity.GetClientName(),
 			"topic":  entity.GetTopic(),
 			"action": string(entity.GetAction()),
 			"access": string(entity.GetAccess()),
@@ -72,7 +72,7 @@ func (this *MnesiaAclHandler) Get(clientName string, clientIdType string) ([]*ac
 func (this *MnesiaAclHandler) Delete(entity *acl.AclEntity, useClientIdType bool) (bool, error) {
 	var operateType = "$all"
 	if entity.GetClientName() != "" {
-		operateType = this.getAuthClientKeyName(useClientIdType) + "/" + entity.GetClientName()
+		operateType = this.getAclClientKeyName(useClientIdType) + "/" + entity.GetClientName()
 	}
 	url := this.host + "api/v4/acl/" + operateType + "/topic" + entity.GetTopic()
 	client := new(Kernel.Client)
@@ -84,7 +84,7 @@ func (this *MnesiaAclHandler) Delete(entity *acl.AclEntity, useClientIdType bool
 	return true, err
 }
 
-func (this *MnesiaAclHandler) getAuthClientKeyName(useClientIdType bool) string {
+func (this *MnesiaAclHandler) getAclClientKeyName(useClientIdType bool) string {
 	if useClientIdType {
 		return "clientid"
 	}

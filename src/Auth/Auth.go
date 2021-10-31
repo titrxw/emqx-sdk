@@ -18,22 +18,22 @@ func NewAuth(handler handler.AuthHandlerInterface, encrypt encrypt.EncryptInterf
 	}
 }
 
-func (auth *Auth) Set(entity *AuthEntity, useClientIdType bool) (bool, error) {
-	if auth.encrypt != nil {
-		entity.SetPassword(auth.encrypt.Encode(entity.GetPassword(), entity.GetSalt()))
+func (this *Auth) Set(entity *AuthEntity, useClientIdType bool) (bool, error) {
+	if this.encrypt != nil {
+		entity.SetPassword(this.encrypt.Encode(entity.GetPassword(), entity.GetSalt()))
 	}
 
-	return auth.handler.Set(entity, useClientIdType)
+	return this.handler.Set(entity, useClientIdType)
 }
 
-func (auth *Auth) Validate(entity *AuthEntity, useClientIdType bool) (bool, error) {
-	if auth.encrypt != nil {
-		entity.SetPassword(auth.encrypt.Encode(entity.GetPassword(), entity.GetSalt()))
+func (this *Auth) Validate(entity *AuthEntity, useClientIdType bool) (bool, error) {
+	if this.encrypt != nil {
+		entity.SetPassword(this.encrypt.Encode(entity.GetPassword(), entity.GetSalt()))
 	}
 
-	return auth.handler.Validate(entity, useClientIdType)
+	return this.handler.Validate(entity, useClientIdType)
 }
 
-func (auth *Auth) Delete(entity *AuthEntity, useClientIdType bool) (bool, error) {
-	return auth.handler.Delete(entity, useClientIdType)
+func (this *Auth) Delete(entity *AuthEntity, useClientIdType bool) (bool, error) {
+	return this.handler.Delete(entity, useClientIdType)
 }

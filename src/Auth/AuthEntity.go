@@ -6,26 +6,26 @@ type AuthEntity struct {
 	salt       string
 }
 
-func (authEntity *AuthEntity) SetClientName(clientName string) {
-	authEntity.clientName = clientName
+func (this *AuthEntity) SetClientName(clientName string) {
+	this.clientName = clientName
 }
 
-func (authEntity *AuthEntity) GetClientName() string {
-	return authEntity.clientName
+func (this *AuthEntity) GetClientName() string {
+	return this.clientName
 }
 
-func (authEntity *AuthEntity) SetPassword(password string) {
-	authEntity.password = password
+func (this *AuthEntity) SetPassword(password string) {
+	this.password = password
 }
 
-func (authEntity *AuthEntity) GetPassword() string {
-	return authEntity.password
+func (this *AuthEntity) GetPassword() string {
+	return this.password
 }
 
-func (authEntity *AuthEntity) SetSalt(salt string) {
-	authEntity.salt = salt
+func (this *AuthEntity) SetSalt(salt string) {
+	this.salt = salt
 }
 
-func (authEntity *AuthEntity) GetSalt() string {
-	return authEntity.salt
+func (this *AuthEntity) GetSalt() string {
+	return this.salt
 }

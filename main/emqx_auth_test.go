@@ -44,6 +44,38 @@ func TestRedisAuthDelete(t *testing.T) {
 			t.Failed()
 		}
 		t.Skipped()
-		t.Failed()
+	})
+}
+
+func TestMnesiaAuthAdd(t *testing.T) {
+	t.Run("testMnesiaHandlerAdd", func(t *testing.T) {
+		ctx := context.Background()
+		handler := handler3.NewMnesiaAuthHandler(ctx, "http://127.0.0.1:18083/", "admin", "public")
+
+		authHandler := auth.NewAuth(handler, nil)
+		entity := new(entity2.AuthEntity)
+		entity.SetClientName("test")
+		entity.SetPassword("test")
+		result, err := authHandler.Set(entity, true)
+		if !result || err != nil {
+			t.Failed()
+		}
+		t.Skipped()
+	})
+}
+
+func TestMnesiaAuthDelete(t *testing.T) {
+	t.Run("testMnesiaHandlerDelete", func(t *testing.T) {
+		ctx := context.Background()
+		handler := handler3.NewMnesiaAuthHandler(ctx, "http://127.0.0.1:18083/", "admin", "public")
+
+		authHandler := auth.NewAuth(handler, nil)
+		entity := new(entity2.AuthEntity)
+		entity.SetClientName("test")
+		result, err := authHandler.Delete(entity, true)
+		if !result || err != nil {
+			t.Failed()
+		}
+		t.Skipped()
 	})
 }

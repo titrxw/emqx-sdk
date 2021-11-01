@@ -1,11 +1,11 @@
 package handler
 
 import (
-	"github.com/titrxw/emqx-sdk/src/Auth"
+	"github.com/titrxw/emqx-sdk/src/Auth/Entity"
 )
 
 type AuthHandlerInterface interface {
-	Set(entity *auth.AuthEntity, useClientIdType bool) (bool, error)
-	Validate(entity *auth.AuthEntity, useClientIdType bool) (bool, error)
-	Delete(entity *auth.AuthEntity, useClientIdType bool) (bool, error)
+	Set(entity *entity.AuthEntity, useClientIdType bool) (bool, error)
+	Validate(entity *entity.AuthEntity, useClientIdType bool) (bool, error)
+	Delete(entity *entity.AuthEntity, useClientIdType bool) (bool, error)
 }

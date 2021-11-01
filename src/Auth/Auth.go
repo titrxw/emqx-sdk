@@ -2,6 +2,7 @@ package auth
 
 import (
 	encrypt "github.com/titrxw/emqx-sdk/src/Auth/Encrypt"
+	"github.com/titrxw/emqx-sdk/src/Auth/Entity"
 	handler "github.com/titrxw/emqx-sdk/src/Auth/Handler"
 )
 
@@ -18,7 +19,7 @@ func NewAuth(handler handler.AuthHandlerInterface, encrypt encrypt.EncryptInterf
 	}
 }
 
-func (this *Auth) Set(entity *AuthEntity, useClientIdType bool) (bool, error) {
+func (this *Auth) Set(entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
 	if this.encrypt != nil {
 		entity.SetPassword(this.encrypt.Encode(entity.GetPassword(), entity.GetSalt()))
 	}
@@ -26,7 +27,7 @@ func (this *Auth) Set(entity *AuthEntity, useClientIdType bool) (bool, error) {
 	return this.handler.Set(entity, useClientIdType)
 }
 
-func (this *Auth) Validate(entity *AuthEntity, useClientIdType bool) (bool, error) {
+func (this *Auth) Validate(entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
 	if this.encrypt != nil {
 		entity.SetPassword(this.encrypt.Encode(entity.GetPassword(), entity.GetSalt()))
 	}
@@ -34,6 +35,6 @@ func (this *Auth) Validate(entity *AuthEntity, useClientIdType bool) (bool, erro
 	return this.handler.Validate(entity, useClientIdType)
 }
 
-func (this *Auth) Delete(entity *AuthEntity, useClientIdType bool) (bool, error) {
+func (this *Auth) Delete(entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
 	return this.handler.Delete(entity, useClientIdType)
 }

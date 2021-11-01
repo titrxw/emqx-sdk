@@ -1,6 +1,7 @@
 package acl
 
 import (
+	"github.com/titrxw/emqx-sdk/src/Acl/Entity"
 	handler "github.com/titrxw/emqx-sdk/src/Acl/Handler"
 )
 
@@ -15,14 +16,14 @@ func NewAcl(handler handler.AclHandlerInterface) *Acl {
 	}
 }
 
-func (this *Acl) Set(entity *AclEntity, useClientIdType bool) (bool, error) {
+func (this *Acl) Set(entity *entity.AclEntity, useClientIdType bool) (bool, error) {
 	return this.handler.Set(entity, useClientIdType)
 }
 
-func (this *Acl) Get(clientName string, clientIdType string) ([]*AclEntity, error) {
+func (this *Acl) Get(clientName string, clientIdType string) ([]*entity.AclEntity, error) {
 	return this.handler.Get(clientName, clientIdType)
 }
 
-func (this *Acl) Delete(entity *AclEntity, useClientIdType bool) (bool, error) {
+func (this *Acl) Delete(entity *entity.AclEntity, useClientIdType bool) (bool, error) {
 	return this.handler.Delete(entity, useClientIdType)
 }

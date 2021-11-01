@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 	"github.com/go-redis/redis/v8"
-	auth "github.com/titrxw/emqx-sdk/src/Auth"
+	"github.com/titrxw/emqx-sdk/src/Auth/Entity"
 )
 
 type RedisAuthHandler struct {
@@ -26,7 +26,7 @@ func NewRedisAuthHandler(ctx context.Context, redis *redis.Client, clientKeyPref
 	}
 }
 
-func (this *RedisAuthHandler) Set(entity *auth.AuthEntity, useClientIdType bool) (bool, error) {
+func (this *RedisAuthHandler) Set(entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
 	var boolCmd *redis.BoolCmd
 	if entity.GetSalt() == "" {
 		boolCmd = this.redis.HMSet(this.ctx, this.clientKeyPrefix+entity.GetClientName(), "password", entity.GetPassword())
@@ -37,7 +37,7 @@ func (this *RedisAuthHandler) Set(entity *auth.AuthEntity, useClientIdType bool)
 	return boolCmd.Val(), boolCmd.Err()
 }
 
-func (this *RedisAuthHandler) Validate(entity *auth.AuthEntity, useClientIdType bool) (bool, error) {
+func (this *RedisAuthHandler) Validate(entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
 	sliceCmd := this.redis.HMGet(this.ctx, this.clientKeyPrefix+entity.GetClientName(), "password")
 	if sliceCmd.Err() != nil {
 		return false, sliceCmd.Err()
@@ -46,7 +46,7 @@ func (this *RedisAuthHandler) Validate(entity *auth.AuthEntity, useClientIdType 
 	return sliceCmd.Val()[0] == entity.GetPassword(), nil
 }
 
-func (this *RedisAuthHandler) Delete(entity *auth.AuthEntity, useClientIdType bool) (bool, error) {
-	intCmd := this.redis.HDel(this.ctx, this.clientKeyPrefix+entity.GetClientName())
+func (this *RedisAuthHandler) Delete(entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
+	intCmd := this.redis.Del(this.ctx, this.clientKeyPrefix+entity.GetClientName())
 	return true, intCmd.Err()
 }

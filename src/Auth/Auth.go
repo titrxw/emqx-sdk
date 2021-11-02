@@ -38,3 +38,7 @@ func (this *Auth) Validate(entity *entity.AuthEntity, useClientIdType bool) (boo
 func (this *Auth) Delete(entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
 	return this.handler.Delete(entity, useClientIdType)
 }
+
+func (this *Auth) ExportConfig(useClientIdType bool) string {
+	return this.handler.ExportConfig(useClientIdType)
+}

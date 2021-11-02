@@ -79,3 +79,7 @@ func (this *MnesiaAuthHandler) getAuthClientKeyName(useClientIdType bool) string
 
 	return "username"
 }
+
+func (this *MnesiaAuthHandler) ExportConfig(useClientIdType bool) string {
+	return ""
+}

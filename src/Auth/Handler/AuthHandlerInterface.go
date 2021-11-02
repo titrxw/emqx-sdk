@@ -8,4 +8,5 @@ type AuthHandlerInterface interface {
 	Set(entity *entity.AuthEntity, useClientIdType bool) (bool, error)
 	Validate(entity *entity.AuthEntity, useClientIdType bool) (bool, error)
 	Delete(entity *entity.AuthEntity, useClientIdType bool) (bool, error)
+	ExportConfig(useClientIdType bool) string
 }

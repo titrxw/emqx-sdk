@@ -50,3 +50,11 @@ func (this *RedisAuthHandler) Delete(entity *entity.AuthEntity, useClientIdType 
 	intCmd := this.redis.Del(this.ctx, this.clientKeyPrefix+entity.GetClientName())
 	return true, intCmd.Err()
 }
+
+func (this *RedisAuthHandler) ExportConfig(useClientIdType bool) string {
+	var typeName = "u"
+	if useClientIdType {
+		typeName = "c"
+	}
+	return "auth.redis.auth_cmd = HMGET " + this.clientKeyPrefix + "%" + typeName + " password salt"
+}

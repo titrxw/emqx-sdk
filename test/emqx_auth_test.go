@@ -79,3 +79,19 @@ func TestMnesiaAuthDelete(t *testing.T) {
 		t.Skipped()
 	})
 }
+
+func TestExportConfig1(t *testing.T) {
+	t.Run("testExportConfig", func(t *testing.T) {
+		ctx := context.Background()
+		handler := handler3.NewRedisAuthHandler(ctx, redis.NewClient(&redis.Options{
+			Addr: "127.0.0.1:6379",
+		}), "mqtt:user:")
+
+		authHandler := auth.NewAuth(handler, nil)
+		config := authHandler.ExportConfig(true)
+		if config == "auth.redis.auth_cmd = HMGET mqtt:user:%c password salt" {
+			t.Skipped()
+		}
+		t.Failed()
+	})
+}

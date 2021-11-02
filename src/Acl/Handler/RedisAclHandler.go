@@ -55,3 +55,12 @@ func (this *RedisAclHandler) Delete(entity *entity.AclEntity, useClientIdType bo
 	intCmd := this.redis.HDel(this.ctx, this.clientKeyPrefix+entity.GetClientName(), entity.GetTopic())
 	return true, intCmd.Err()
 }
+
+func (this *RedisAclHandler) ExportConfig(useClientIdType bool) string {
+	var typeName = "u"
+	if useClientIdType {
+		typeName = "c"
+	}
+
+	return "auth.redis.acl_cmd = HGETALL " + this.clientKeyPrefix + "%" + typeName
+}

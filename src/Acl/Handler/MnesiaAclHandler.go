@@ -99,3 +99,7 @@ func (this *MnesiaAclHandler) getAclClientKeyName(useClientIdType bool) string {
 
 	return "username"
 }
+
+func (this *MnesiaAclHandler) ExportConfig(useClientIdType bool) string {
+	return ""
+}

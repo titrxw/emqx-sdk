@@ -27,3 +27,7 @@ func (this *Acl) Get(clientName string, clientIdType string) ([]*entity.AclEntit
 func (this *Acl) Delete(entity *entity.AclEntity, useClientIdType bool) (bool, error) {
 	return this.handler.Delete(entity, useClientIdType)
 }
+
+func (this *Acl) ExportConfig(useClientIdType bool) string {
+	return this.handler.ExportConfig(useClientIdType)
+}

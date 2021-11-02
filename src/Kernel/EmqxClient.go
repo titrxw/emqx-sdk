@@ -3,7 +3,6 @@ package kernel
 import (
 	"encoding/base64"
 	"errors"
-	"fmt"
 	"github.com/imroc/req"
 )
 
@@ -69,7 +68,6 @@ func (this *EmqxClient) parseSuccessResponse(response *req.Resp) (map[string]int
 		return nil, errors.New(msg)
 	}
 
-	fmt.Print(response.ToString())
 	var data map[string]interface{}
 	err := response.ToJSON(&data)
 	if err != nil {

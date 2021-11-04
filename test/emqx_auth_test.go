@@ -2,20 +2,16 @@ package gotest
 
 import (
 	"context"
-	"github.com/go-redis/redis/v8"
 	auth "github.com/titrxw/emqx-sdk/src/Auth"
 	entity2 "github.com/titrxw/emqx-sdk/src/Auth/Entity"
 	handler3 "github.com/titrxw/emqx-sdk/src/Auth/Handler"
-	kernel "github.com/titrxw/emqx-sdk/src/Kernel"
 	"testing"
 )
 
 func TestRedisAuthAdd(t *testing.T) {
 	t.Run("testRedisHandlerAdd", func(t *testing.T) {
 		ctx := context.Background()
-		handler := handler3.NewRedisAuthHandler(redis.NewClient(&redis.Options{
-			Addr: "127.0.0.1:6379",
-		}), "")
+		handler := handler3.NewRedisAuthHandler(GetRedisClient(), "")
 
 		authHandler := auth.NewAuth(handler, nil)
 		entity := new(entity2.AuthEntity)
@@ -32,9 +28,7 @@ func TestRedisAuthAdd(t *testing.T) {
 func TestRedisAuthDelete(t *testing.T) {
 	t.Run("testRedisHandlerDelete", func(t *testing.T) {
 		ctx := context.Background()
-		handler := handler3.NewRedisAuthHandler(redis.NewClient(&redis.Options{
-			Addr: "127.0.0.1:6379",
-		}), "")
+		handler := handler3.NewRedisAuthHandler(GetRedisClient(), "")
 
 		authHandler := auth.NewAuth(handler, nil)
 		entity := new(entity2.AuthEntity)
@@ -51,12 +45,7 @@ func TestRedisAuthDelete(t *testing.T) {
 func TestMnesiaAuthAdd(t *testing.T) {
 	t.Run("testMnesiaHandlerAdd", func(t *testing.T) {
 		ctx := context.Background()
-		client := &kernel.EmqxClient{
-			Host:      "http://127.0.0.1:18083/",
-			AppId:     "admin",
-			AppSecret: "public",
-		}
-		handler := handler3.NewMnesiaAuthHandler(client)
+		handler := handler3.NewMnesiaAuthHandler(GetEmqxClient())
 
 		authHandler := auth.NewAuth(handler, nil)
 		entity := new(entity2.AuthEntity)
@@ -73,12 +62,7 @@ func TestMnesiaAuthAdd(t *testing.T) {
 func TestMnesiaAuthDelete(t *testing.T) {
 	t.Run("testMnesiaHandlerDelete", func(t *testing.T) {
 		ctx := context.Background()
-		client := &kernel.EmqxClient{
-			Host:      "http://127.0.0.1:18083/",
-			AppId:     "admin",
-			AppSecret: "public",
-		}
-		handler := handler3.NewMnesiaAuthHandler(client)
+		handler := handler3.NewMnesiaAuthHandler(GetEmqxClient())
 
 		authHandler := auth.NewAuth(handler, nil)
 		entity := new(entity2.AuthEntity)
@@ -93,9 +77,7 @@ func TestMnesiaAuthDelete(t *testing.T) {
 
 func TestExportConfig1(t *testing.T) {
 	t.Run("testExportConfig", func(t *testing.T) {
-		handler := handler3.NewRedisAuthHandler(redis.NewClient(&redis.Options{
-			Addr: "127.0.0.1:6379",
-		}), "mqtt:user:")
+		handler := handler3.NewRedisAuthHandler(nil, "mqtt:user:")
 
 		authHandler := auth.NewAuth(handler, nil)
 		config := authHandler.ExportConfig(true)

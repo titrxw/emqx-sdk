@@ -2,19 +2,16 @@ package gotest
 
 import (
 	"context"
-	"github.com/go-redis/redis/v8"
 	acl "github.com/titrxw/emqx-sdk/src/Acl"
 	entity "github.com/titrxw/emqx-sdk/src/Acl/Entity"
 	handler2 "github.com/titrxw/emqx-sdk/src/Acl/Handler"
-	kernel "github.com/titrxw/emqx-sdk/src/Kernel"
 	"testing"
 )
 
 func TestRedisAclAdd(t *testing.T) {
 	t.Run("testRedisAclAdd", func(t *testing.T) {
 		ctx := context.Background()
-		handler := handler2.NewRedisAclHandler(redis.NewClient(&redis.Options{
-			Addr: "127.0.0.1:6379"}), "")
+		handler := handler2.NewRedisAclHandler(GetRedisClient(), "")
 
 		aclHandler := acl.NewAcl(handler)
 		entity := new(entity.AclEntity)
@@ -33,8 +30,7 @@ func TestRedisAclAdd(t *testing.T) {
 func TestRedisAclDelete(t *testing.T) {
 	t.Run("testRedisAclDelete", func(t *testing.T) {
 		ctx := context.Background()
-		handler := handler2.NewRedisAclHandler(redis.NewClient(&redis.Options{
-			Addr: "127.0.0.1:6379"}), "")
+		handler := handler2.NewRedisAclHandler(GetRedisClient(), "")
 
 		aclHandler := acl.NewAcl(handler)
 		entity := new(entity.AclEntity)
@@ -53,12 +49,7 @@ func TestRedisAclDelete(t *testing.T) {
 func TestMnesiaAclAdd(t *testing.T) {
 	t.Run("testMnesiaAclAdd", func(t *testing.T) {
 		ctx := context.Background()
-		client := &kernel.EmqxClient{
-			Host:      "http://127.0.0.1:18083/",
-			AppId:     "admin",
-			AppSecret: "public",
-		}
-		handler := handler2.NewMnesiaAclHandler(client)
+		handler := handler2.NewMnesiaAclHandler(GetEmqxClient())
 
 		aclHandler := acl.NewAcl(handler)
 		entity := new(entity.AclEntity)
@@ -77,12 +68,7 @@ func TestMnesiaAclAdd(t *testing.T) {
 func TestMnesiaAclDelete(t *testing.T) {
 	t.Run("testMnesiaAclDelete", func(t *testing.T) {
 		ctx := context.Background()
-		client := &kernel.EmqxClient{
-			Host:      "http://127.0.0.1:18083/",
-			AppId:     "admin",
-			AppSecret: "public",
-		}
-		handler := handler2.NewMnesiaAclHandler(client)
+		handler := handler2.NewMnesiaAclHandler(GetEmqxClient())
 
 		aclHandler := acl.NewAcl(handler)
 		entity := new(entity.AclEntity)
@@ -100,8 +86,7 @@ func TestMnesiaAclDelete(t *testing.T) {
 
 func TestExportConfig(t *testing.T) {
 	t.Run("testExportConfig", func(t *testing.T) {
-		handler := handler2.NewRedisAclHandler(redis.NewClient(&redis.Options{
-			Addr: "127.0.0.1:6379"}), "mqtt:user:")
+		handler := handler2.NewRedisAclHandler(nil, "mqtt:user:")
 
 		aclHandler := acl.NewAcl(handler)
 		config := aclHandler.ExportConfig(true)

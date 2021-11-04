@@ -12,7 +12,7 @@ type RedisAclHandler struct {
 	clientKeyPrefix string
 }
 
-func NewRedisAclHandler(ctx context.Context, redis *redis.Client, clientKeyPrefix string) *RedisAclHandler {
+func NewRedisAclHandler(redis *redis.Client, clientKeyPrefix string) *RedisAclHandler {
 	if clientKeyPrefix == "" {
 		clientKeyPrefix = "mqtt:emqx:acl:"
 	}
@@ -20,20 +20,17 @@ func NewRedisAclHandler(ctx context.Context, redis *redis.Client, clientKeyPrefi
 	return &RedisAclHandler{
 		redis:           redis,
 		clientKeyPrefix: clientKeyPrefix,
-		AclHandlerAbstract: AclHandlerAbstract{
-			ctx: ctx,
-		},
 	}
 }
 
-func (this *RedisAclHandler) Set(entity *entity.AclEntity, useClientIdType bool) (bool, error) {
-	intCmd := this.redis.HSet(this.ctx, this.clientKeyPrefix+entity.GetClientName(), entity.GetTopic(), string(entity.GetAction()))
+func (this *RedisAclHandler) Set(ctx context.Context, entity *entity.AclEntity, useClientIdType bool) (bool, error) {
+	intCmd := this.redis.HSet(ctx, this.clientKeyPrefix+entity.GetClientName(), entity.GetTopic(), string(entity.GetAction()))
 	return intCmd.Val() > 0, intCmd.Err()
 }
 
-func (this *RedisAclHandler) Get(clientName string, clientIdType string) ([]*entity.AclEntity, error) {
+func (this *RedisAclHandler) Get(ctx context.Context, clientName string, clientIdType string) ([]*entity.AclEntity, error) {
 	var entityMap []*entity.AclEntity
-	maps := this.redis.HGetAll(this.ctx, this.clientKeyPrefix+clientName)
+	maps := this.redis.HGetAll(ctx, this.clientKeyPrefix+clientName)
 	if maps.Err() != nil {
 		return entityMap, maps.Err()
 	}
@@ -51,8 +48,8 @@ func (this *RedisAclHandler) Get(clientName string, clientIdType string) ([]*ent
 	return entityMap, nil
 }
 
-func (this *RedisAclHandler) Delete(entity *entity.AclEntity, useClientIdType bool) (bool, error) {
-	intCmd := this.redis.HDel(this.ctx, this.clientKeyPrefix+entity.GetClientName(), entity.GetTopic())
+func (this *RedisAclHandler) Delete(ctx context.Context, entity *entity.AclEntity, useClientIdType bool) (bool, error) {
+	intCmd := this.redis.HDel(ctx, this.clientKeyPrefix+entity.GetClientName(), entity.GetTopic())
 	return true, intCmd.Err()
 }
 

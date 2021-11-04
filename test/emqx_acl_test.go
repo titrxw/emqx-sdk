@@ -12,7 +12,7 @@ import (
 func TestRedisAclAdd(t *testing.T) {
 	t.Run("testRedisAclAdd", func(t *testing.T) {
 		ctx := context.Background()
-		handler := handler2.NewRedisAclHandler(ctx, redis.NewClient(&redis.Options{
+		handler := handler2.NewRedisAclHandler(redis.NewClient(&redis.Options{
 			Addr: "127.0.0.1:6379"}), "")
 
 		aclHandler := acl.NewAcl(handler)
@@ -21,7 +21,7 @@ func TestRedisAclAdd(t *testing.T) {
 		entity.SetTopic("/sdf/sdfsdf")
 		entity.SetAccessAllow()
 		entity.SetActionPub()
-		result, err := aclHandler.Set(entity, true)
+		result, err := aclHandler.Set(ctx, entity, true)
 		if !result || err != nil {
 			t.Failed()
 		}
@@ -32,7 +32,7 @@ func TestRedisAclAdd(t *testing.T) {
 func TestRedisAclDelete(t *testing.T) {
 	t.Run("testRedisAclDelete", func(t *testing.T) {
 		ctx := context.Background()
-		handler := handler2.NewRedisAclHandler(ctx, redis.NewClient(&redis.Options{
+		handler := handler2.NewRedisAclHandler(redis.NewClient(&redis.Options{
 			Addr: "127.0.0.1:6379"}), "")
 
 		aclHandler := acl.NewAcl(handler)
@@ -41,7 +41,7 @@ func TestRedisAclDelete(t *testing.T) {
 		entity.SetTopic("/sdf/sdfsdf")
 		entity.SetAccessAllow()
 		entity.SetActionPub()
-		result, err := aclHandler.Delete(entity, true)
+		result, err := aclHandler.Delete(ctx, entity, true)
 		if !result || err != nil {
 			t.Failed()
 		}
@@ -52,7 +52,7 @@ func TestRedisAclDelete(t *testing.T) {
 func TestMnesiaAclAdd(t *testing.T) {
 	t.Run("testMnesiaAclAdd", func(t *testing.T) {
 		ctx := context.Background()
-		handler := handler2.NewMnesiaAclHandler(ctx, "http://127.0.0.1:18083/", "admin", "public")
+		handler := handler2.NewMnesiaAclHandler("http://127.0.0.1:18083/", "admin", "public")
 
 		aclHandler := acl.NewAcl(handler)
 		entity := new(entity.AclEntity)
@@ -60,7 +60,7 @@ func TestMnesiaAclAdd(t *testing.T) {
 		entity.SetTopic("/sdf/sdfsdf")
 		entity.SetAccessAllow()
 		entity.SetActionPub()
-		result, err := aclHandler.Set(entity, true)
+		result, err := aclHandler.Set(ctx, entity, true)
 		if !result || err != nil {
 			t.Failed()
 		}
@@ -71,7 +71,7 @@ func TestMnesiaAclAdd(t *testing.T) {
 func TestMnesiaAclDelete(t *testing.T) {
 	t.Run("testMnesiaAclDelete", func(t *testing.T) {
 		ctx := context.Background()
-		handler := handler2.NewMnesiaAclHandler(ctx, "http://127.0.0.1:18083/", "admin", "public")
+		handler := handler2.NewMnesiaAclHandler("http://127.0.0.1:18083/", "admin", "public")
 
 		aclHandler := acl.NewAcl(handler)
 		entity := new(entity.AclEntity)
@@ -79,7 +79,7 @@ func TestMnesiaAclDelete(t *testing.T) {
 		entity.SetTopic("/sdf/sdfsdf")
 		entity.SetAccessAllow()
 		entity.SetActionPub()
-		result, err := aclHandler.Delete(entity, true)
+		result, err := aclHandler.Delete(ctx, entity, true)
 		if !result || err != nil {
 			t.Failed()
 		}
@@ -89,8 +89,7 @@ func TestMnesiaAclDelete(t *testing.T) {
 
 func TestExportConfig(t *testing.T) {
 	t.Run("testExportConfig", func(t *testing.T) {
-		ctx := context.Background()
-		handler := handler2.NewRedisAclHandler(ctx, redis.NewClient(&redis.Options{
+		handler := handler2.NewRedisAclHandler(redis.NewClient(&redis.Options{
 			Addr: "127.0.0.1:6379"}), "mqtt:user:")
 
 		aclHandler := acl.NewAcl(handler)

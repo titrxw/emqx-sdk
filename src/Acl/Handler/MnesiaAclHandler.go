@@ -14,11 +14,8 @@ type MnesiaAclHandler struct {
 	kernel.EmqxClient
 }
 
-func NewMnesiaAclHandler(ctx context.Context, host string, appId string, appSecret string) *MnesiaAclHandler {
+func NewMnesiaAclHandler(host string, appId string, appSecret string) *MnesiaAclHandler {
 	return &MnesiaAclHandler{
-		AclHandlerAbstract: AclHandlerAbstract{
-			ctx: ctx,
-		},
 		EmqxClient: kernel.EmqxClient{
 			Host:      host,
 			AppId:     appId,
@@ -27,7 +24,7 @@ func NewMnesiaAclHandler(ctx context.Context, host string, appId string, appSecr
 	}
 }
 
-func (this *MnesiaAclHandler) Set(entity *entity.AclEntity, useClientIdType bool) (bool, error) {
+func (this *MnesiaAclHandler) Set(ctx context.Context, entity *entity.AclEntity, useClientIdType bool) (bool, error) {
 	path := "api/v4/acl"
 
 	var err error
@@ -52,7 +49,7 @@ func (this *MnesiaAclHandler) Set(entity *entity.AclEntity, useClientIdType bool
 	return true, err
 }
 
-func (this *MnesiaAclHandler) Get(clientName string, clientIdType string) ([]*entity.AclEntity, error) {
+func (this *MnesiaAclHandler) Get(ctx context.Context, clientName string, clientIdType string) ([]*entity.AclEntity, error) {
 	var entityMap []*entity.AclEntity
 	path := "api/v4/acl/" + clientIdType + "/" + clientName
 	data, err := this.EmqxClient.Get(path)
@@ -78,7 +75,7 @@ func (this *MnesiaAclHandler) Get(clientName string, clientIdType string) ([]*en
 	return entityMap, nil
 }
 
-func (this *MnesiaAclHandler) Delete(entity *entity.AclEntity, useClientIdType bool) (bool, error) {
+func (this *MnesiaAclHandler) Delete(ctx context.Context, entity *entity.AclEntity, useClientIdType bool) (bool, error) {
 	var operateType = "$all"
 	if entity.GetClientName() != "" {
 		operateType = this.getAclClientKeyName(useClientIdType) + "/" + entity.GetClientName()

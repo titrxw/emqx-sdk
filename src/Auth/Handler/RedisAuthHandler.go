@@ -12,7 +12,7 @@ type RedisAuthHandler struct {
 	clientKeyPrefix string
 }
 
-func NewRedisAuthHandler(ctx context.Context, redis *redis.Client, clientKeyPrefix string) *RedisAuthHandler {
+func NewRedisAuthHandler(redis *redis.Client, clientKeyPrefix string) *RedisAuthHandler {
 	if clientKeyPrefix == "" {
 		clientKeyPrefix = "mqtt:emqx:user:"
 	}
@@ -20,25 +20,22 @@ func NewRedisAuthHandler(ctx context.Context, redis *redis.Client, clientKeyPref
 	return &RedisAuthHandler{
 		redis:           redis,
 		clientKeyPrefix: clientKeyPrefix,
-		AuthHandlerAbstract: AuthHandlerAbstract{
-			ctx: ctx,
-		},
 	}
 }
 
-func (this *RedisAuthHandler) Set(entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
+func (this *RedisAuthHandler) Set(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
 	var boolCmd *redis.BoolCmd
 	if entity.GetSalt() == "" {
-		boolCmd = this.redis.HMSet(this.ctx, this.clientKeyPrefix+entity.GetClientName(), "password", entity.GetPassword())
+		boolCmd = this.redis.HMSet(ctx, this.clientKeyPrefix+entity.GetClientName(), "password", entity.GetPassword())
 	} else {
-		boolCmd = this.redis.HMSet(this.ctx, this.clientKeyPrefix+entity.GetClientName(), "password", entity.GetPassword(), "salt", entity.GetSalt())
+		boolCmd = this.redis.HMSet(ctx, this.clientKeyPrefix+entity.GetClientName(), "password", entity.GetPassword(), "salt", entity.GetSalt())
 	}
 
 	return boolCmd.Val(), boolCmd.Err()
 }
 
-func (this *RedisAuthHandler) Validate(entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
-	sliceCmd := this.redis.HMGet(this.ctx, this.clientKeyPrefix+entity.GetClientName(), "password")
+func (this *RedisAuthHandler) Validate(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
+	sliceCmd := this.redis.HMGet(ctx, this.clientKeyPrefix+entity.GetClientName(), "password")
 	if sliceCmd.Err() != nil {
 		return false, sliceCmd.Err()
 	}
@@ -46,8 +43,8 @@ func (this *RedisAuthHandler) Validate(entity *entity.AuthEntity, useClientIdTyp
 	return sliceCmd.Val()[0] == entity.GetPassword(), nil
 }
 
-func (this *RedisAuthHandler) Delete(entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
-	intCmd := this.redis.Del(this.ctx, this.clientKeyPrefix+entity.GetClientName())
+func (this *RedisAuthHandler) Delete(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
+	intCmd := this.redis.Del(ctx, this.clientKeyPrefix+entity.GetClientName())
 	return true, intCmd.Err()
 }
 

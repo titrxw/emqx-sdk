@@ -12,7 +12,7 @@ import (
 func TestRedisAuthAdd(t *testing.T) {
 	t.Run("testRedisHandlerAdd", func(t *testing.T) {
 		ctx := context.Background()
-		handler := handler3.NewRedisAuthHandler(ctx, redis.NewClient(&redis.Options{
+		handler := handler3.NewRedisAuthHandler(redis.NewClient(&redis.Options{
 			Addr: "127.0.0.1:6379",
 		}), "")
 
@@ -20,7 +20,7 @@ func TestRedisAuthAdd(t *testing.T) {
 		entity := new(entity2.AuthEntity)
 		entity.SetClientName("lens_z1vX8evgbwuMeb0gbban4GT32ub")
 		entity.SetPassword("sdfsdfsdf")
-		result, err := authHandler.Set(entity, true)
+		result, err := authHandler.Set(ctx, entity, true)
 		if !result || err != nil {
 			t.Failed()
 		}
@@ -31,7 +31,7 @@ func TestRedisAuthAdd(t *testing.T) {
 func TestRedisAuthDelete(t *testing.T) {
 	t.Run("testRedisHandlerDelete", func(t *testing.T) {
 		ctx := context.Background()
-		handler := handler3.NewRedisAuthHandler(ctx, redis.NewClient(&redis.Options{
+		handler := handler3.NewRedisAuthHandler(redis.NewClient(&redis.Options{
 			Addr: "127.0.0.1:6379",
 		}), "")
 
@@ -39,7 +39,7 @@ func TestRedisAuthDelete(t *testing.T) {
 		entity := new(entity2.AuthEntity)
 		entity.SetClientName("lens_z1vX8evgbwuMeb0gbban4GT32ub")
 		entity.SetPassword("sdfsdfsdf")
-		result, err := authHandler.Delete(entity, true)
+		result, err := authHandler.Delete(ctx, entity, true)
 		if !result || err != nil {
 			t.Failed()
 		}
@@ -50,13 +50,13 @@ func TestRedisAuthDelete(t *testing.T) {
 func TestMnesiaAuthAdd(t *testing.T) {
 	t.Run("testMnesiaHandlerAdd", func(t *testing.T) {
 		ctx := context.Background()
-		handler := handler3.NewMnesiaAuthHandler(ctx, "http://127.0.0.1:18083/", "admin", "public")
+		handler := handler3.NewMnesiaAuthHandler("http://127.0.0.1:18083/", "admin", "public")
 
 		authHandler := auth.NewAuth(handler, nil)
 		entity := new(entity2.AuthEntity)
 		entity.SetClientName("test")
 		entity.SetPassword("test")
-		result, err := authHandler.Set(entity, true)
+		result, err := authHandler.Set(ctx, entity, true)
 		if !result || err != nil {
 			t.Failed()
 		}
@@ -67,12 +67,12 @@ func TestMnesiaAuthAdd(t *testing.T) {
 func TestMnesiaAuthDelete(t *testing.T) {
 	t.Run("testMnesiaHandlerDelete", func(t *testing.T) {
 		ctx := context.Background()
-		handler := handler3.NewMnesiaAuthHandler(ctx, "http://127.0.0.1:18083/", "admin", "public")
+		handler := handler3.NewMnesiaAuthHandler("http://127.0.0.1:18083/", "admin", "public")
 
 		authHandler := auth.NewAuth(handler, nil)
 		entity := new(entity2.AuthEntity)
 		entity.SetClientName("test")
-		result, err := authHandler.Delete(entity, true)
+		result, err := authHandler.Delete(ctx, entity, true)
 		if !result || err != nil {
 			t.Failed()
 		}
@@ -82,8 +82,7 @@ func TestMnesiaAuthDelete(t *testing.T) {
 
 func TestExportConfig1(t *testing.T) {
 	t.Run("testExportConfig", func(t *testing.T) {
-		ctx := context.Background()
-		handler := handler3.NewRedisAuthHandler(ctx, redis.NewClient(&redis.Options{
+		handler := handler3.NewRedisAuthHandler(redis.NewClient(&redis.Options{
 			Addr: "127.0.0.1:6379",
 		}), "mqtt:user:")
 

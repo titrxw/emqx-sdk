@@ -6,6 +6,7 @@ import (
 	auth "github.com/titrxw/emqx-sdk/src/Auth"
 	entity2 "github.com/titrxw/emqx-sdk/src/Auth/Entity"
 	handler3 "github.com/titrxw/emqx-sdk/src/Auth/Handler"
+	kernel "github.com/titrxw/emqx-sdk/src/Kernel"
 	"testing"
 )
 
@@ -50,7 +51,12 @@ func TestRedisAuthDelete(t *testing.T) {
 func TestMnesiaAuthAdd(t *testing.T) {
 	t.Run("testMnesiaHandlerAdd", func(t *testing.T) {
 		ctx := context.Background()
-		handler := handler3.NewMnesiaAuthHandler("http://127.0.0.1:18083/", "admin", "public")
+		client := &kernel.EmqxClient{
+			Host:      "http://127.0.0.1:18083/",
+			AppId:     "admin",
+			AppSecret: "public",
+		}
+		handler := handler3.NewMnesiaAuthHandler(client)
 
 		authHandler := auth.NewAuth(handler, nil)
 		entity := new(entity2.AuthEntity)
@@ -67,7 +73,12 @@ func TestMnesiaAuthAdd(t *testing.T) {
 func TestMnesiaAuthDelete(t *testing.T) {
 	t.Run("testMnesiaHandlerDelete", func(t *testing.T) {
 		ctx := context.Background()
-		handler := handler3.NewMnesiaAuthHandler("http://127.0.0.1:18083/", "admin", "public")
+		client := &kernel.EmqxClient{
+			Host:      "http://127.0.0.1:18083/",
+			AppId:     "admin",
+			AppSecret: "public",
+		}
+		handler := handler3.NewMnesiaAuthHandler(client)
 
 		authHandler := auth.NewAuth(handler, nil)
 		entity := new(entity2.AuthEntity)

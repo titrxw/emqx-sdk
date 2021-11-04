@@ -10,15 +10,13 @@ import (
 
 type MnesiaAuthHandler struct {
 	AuthHandlerAbstract
-	kernel.EmqxClient
+	kernel.OpenApiAbstract
 }
 
-func NewMnesiaAuthHandler(host string, appId string, appSecret string) *MnesiaAuthHandler {
+func NewMnesiaAuthHandler(client *kernel.EmqxClient) *MnesiaAuthHandler {
 	return &MnesiaAuthHandler{
-		EmqxClient: kernel.EmqxClient{
-			Host:      host,
-			AppId:     appId,
-			AppSecret: appSecret,
+		OpenApiAbstract: kernel.OpenApiAbstract{
+			Client: client,
 		},
 	}
 }
@@ -26,7 +24,7 @@ func NewMnesiaAuthHandler(host string, appId string, appSecret string) *MnesiaAu
 func (this *MnesiaAuthHandler) Set(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
 	path := "api/v4/auth_" + this.getAuthClientKeyName(useClientIdType)
 
-	_, err := this.EmqxClient.Post(path, req.BodyJSON(map[string]string{
+	_, err := this.Client.Post(path, req.BodyJSON(map[string]string{
 		this.getAuthClientKeyName(useClientIdType): entity.GetClientName(),
 		"password": entity.GetPassword(),
 	}), ctx)
@@ -38,7 +36,7 @@ func (this *MnesiaAuthHandler) Set(ctx context.Context, entity *entity.AuthEntit
 
 func (this *MnesiaAuthHandler) Validate(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
 	path := "api/v4/auth_" + this.getAuthClientKeyName(useClientIdType) + "/" + entity.GetClientName()
-	data, err := this.EmqxClient.Get(path, ctx)
+	data, err := this.Client.Get(path, ctx)
 	if err != nil {
 		return false, err
 	}
@@ -61,7 +59,7 @@ func (this *MnesiaAuthHandler) Validate(ctx context.Context, entity *entity.Auth
 
 func (this *MnesiaAuthHandler) Delete(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
 	path := "api/v4/auth_" + this.getAuthClientKeyName(useClientIdType) + "/" + entity.GetClientName()
-	_, err := this.EmqxClient.Delete(path, ctx)
+	_, err := this.Client.Delete(path, ctx)
 	if err != nil {
 		return false, err
 	}

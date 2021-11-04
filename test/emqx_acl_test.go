@@ -6,6 +6,7 @@ import (
 	acl "github.com/titrxw/emqx-sdk/src/Acl"
 	entity "github.com/titrxw/emqx-sdk/src/Acl/Entity"
 	handler2 "github.com/titrxw/emqx-sdk/src/Acl/Handler"
+	kernel "github.com/titrxw/emqx-sdk/src/Kernel"
 	"testing"
 )
 
@@ -52,7 +53,12 @@ func TestRedisAclDelete(t *testing.T) {
 func TestMnesiaAclAdd(t *testing.T) {
 	t.Run("testMnesiaAclAdd", func(t *testing.T) {
 		ctx := context.Background()
-		handler := handler2.NewMnesiaAclHandler("http://127.0.0.1:18083/", "admin", "public")
+		client := &kernel.EmqxClient{
+			Host:      "http://127.0.0.1:18083/",
+			AppId:     "admin",
+			AppSecret: "public",
+		}
+		handler := handler2.NewMnesiaAclHandler(client)
 
 		aclHandler := acl.NewAcl(handler)
 		entity := new(entity.AclEntity)
@@ -71,7 +77,12 @@ func TestMnesiaAclAdd(t *testing.T) {
 func TestMnesiaAclDelete(t *testing.T) {
 	t.Run("testMnesiaAclDelete", func(t *testing.T) {
 		ctx := context.Background()
-		handler := handler2.NewMnesiaAclHandler("http://127.0.0.1:18083/", "admin", "public")
+		client := &kernel.EmqxClient{
+			Host:      "http://127.0.0.1:18083/",
+			AppId:     "admin",
+			AppSecret: "public",
+		}
+		handler := handler2.NewMnesiaAclHandler(client)
 
 		aclHandler := acl.NewAcl(handler)
 		entity := new(entity.AclEntity)

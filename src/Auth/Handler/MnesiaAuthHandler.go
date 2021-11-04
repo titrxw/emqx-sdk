@@ -29,7 +29,7 @@ func (this *MnesiaAuthHandler) Set(ctx context.Context, entity *entity.AuthEntit
 	_, err := this.EmqxClient.Post(path, req.BodyJSON(map[string]string{
 		this.getAuthClientKeyName(useClientIdType): entity.GetClientName(),
 		"password": entity.GetPassword(),
-	}))
+	}), ctx)
 	if err != nil {
 		return false, err
 	}
@@ -38,7 +38,7 @@ func (this *MnesiaAuthHandler) Set(ctx context.Context, entity *entity.AuthEntit
 
 func (this *MnesiaAuthHandler) Validate(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
 	path := "api/v4/auth_" + this.getAuthClientKeyName(useClientIdType) + "/" + entity.GetClientName()
-	data, err := this.EmqxClient.Get(path)
+	data, err := this.EmqxClient.Get(path, ctx)
 	if err != nil {
 		return false, err
 	}
@@ -61,7 +61,7 @@ func (this *MnesiaAuthHandler) Validate(ctx context.Context, entity *entity.Auth
 
 func (this *MnesiaAuthHandler) Delete(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
 	path := "api/v4/auth_" + this.getAuthClientKeyName(useClientIdType) + "/" + entity.GetClientName()
-	_, err := this.EmqxClient.Delete(path)
+	_, err := this.EmqxClient.Delete(path, ctx)
 	if err != nil {
 		return false, err
 	}

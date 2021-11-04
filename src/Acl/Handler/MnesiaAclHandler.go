@@ -34,13 +34,13 @@ func (this *MnesiaAclHandler) Set(ctx context.Context, entity *entity.AclEntity,
 			"topic":  entity.GetTopic(),
 			"action": string(entity.GetAction()),
 			"access": string(entity.GetAccess()),
-		}))
+		}), ctx)
 	} else {
 		_, err = this.EmqxClient.Post(path, req.BodyJSON(map[string]string{
 			"topic":  entity.GetTopic(),
 			"action": string(entity.GetAction()),
 			"access": string(entity.GetAccess()),
-		}))
+		}), ctx)
 	}
 
 	if err != nil {
@@ -52,7 +52,7 @@ func (this *MnesiaAclHandler) Set(ctx context.Context, entity *entity.AclEntity,
 func (this *MnesiaAclHandler) Get(ctx context.Context, clientName string, clientIdType string) ([]*entity.AclEntity, error) {
 	var entityMap []*entity.AclEntity
 	path := "api/v4/acl/" + clientIdType + "/" + clientName
-	data, err := this.EmqxClient.Get(path)
+	data, err := this.EmqxClient.Get(path, ctx)
 	if err != nil {
 		return entityMap, err
 	}
@@ -81,7 +81,7 @@ func (this *MnesiaAclHandler) Delete(ctx context.Context, entity *entity.AclEnti
 		operateType = this.getAclClientKeyName(useClientIdType) + "/" + entity.GetClientName()
 	}
 	path := "api/v4/acl/" + operateType + "/topic/" + url.QueryEscape(entity.GetTopic())
-	_, err := this.EmqxClient.Delete(path)
+	_, err := this.EmqxClient.Delete(path, ctx)
 	if err != nil {
 		return false, err
 	}

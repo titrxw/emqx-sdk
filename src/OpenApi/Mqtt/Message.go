@@ -10,7 +10,7 @@ type Message struct {
 	kernel.OpenApiAbstract
 }
 
-func (this *Message) publish(ctx context.Context, topic string, clientId string, payload string, qos int, retain bool) (bool, error) {
+func (this *Message) Publish(ctx context.Context, topic string, clientId string, payload string, qos int, retain bool) (bool, error) {
 	_, err := this.Client.Post("api/v4/mqtt/publish", req.BodyJSON(map[string]interface{}{
 		"topic":    topic,
 		"clientid": clientId,

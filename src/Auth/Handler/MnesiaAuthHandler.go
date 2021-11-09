@@ -3,7 +3,6 @@ package handler
 import (
 	"context"
 	"errors"
-	"github.com/imroc/req"
 	"github.com/titrxw/emqx-sdk/src/Auth/Entity"
 	"github.com/titrxw/emqx-sdk/src/Kernel"
 )
@@ -24,10 +23,10 @@ func NewMnesiaAuthHandler(client *kernel.EmqxClient) *MnesiaAuthHandler {
 func (this *MnesiaAuthHandler) Set(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
 	path := "api/v4/auth_" + this.getAuthClientKeyName(useClientIdType)
 
-	_, err := this.Client.Post(path, req.BodyJSON(map[string]string{
+	_, err := this.Client.Post(ctx, path, map[string]string{
 		this.getAuthClientKeyName(useClientIdType): entity.GetClientName(),
 		"password": entity.GetPassword(),
-	}), ctx)
+	})
 	if err != nil {
 		return false, err
 	}
@@ -36,7 +35,7 @@ func (this *MnesiaAuthHandler) Set(ctx context.Context, entity *entity.AuthEntit
 
 func (this *MnesiaAuthHandler) Validate(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
 	path := "api/v4/auth_" + this.getAuthClientKeyName(useClientIdType) + "/" + entity.GetClientName()
-	data, err := this.Client.Get(path, ctx)
+	data, err := this.Client.Get(ctx, path)
 	if err != nil {
 		return false, err
 	}
@@ -59,7 +58,7 @@ func (this *MnesiaAuthHandler) Validate(ctx context.Context, entity *entity.Auth
 
 func (this *MnesiaAuthHandler) Delete(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
 	path := "api/v4/auth_" + this.getAuthClientKeyName(useClientIdType) + "/" + entity.GetClientName()
-	_, err := this.Client.Delete(path, ctx)
+	_, err := this.Client.Delete(ctx, path)
 	if err != nil {
 		return false, err
 	}

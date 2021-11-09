@@ -1,6 +1,7 @@
 package kernel
 
 import (
+	"context"
 	"encoding/base64"
 	"errors"
 	"github.com/imroc/req"
@@ -20,9 +21,8 @@ func NewClient(host string, appId string, appSecret string) *EmqxClient {
 	}
 }
 
-func (this *EmqxClient) Get(path string, v ...interface{}) (map[string]interface{}, error) {
-	v = append(v, this.getAuthorizationHeader())
-	response, err := req.Get(this.Host+path, v...)
+func (this *EmqxClient) Get(ctx context.Context, path string) (map[string]interface{}, error) {
+	response, err := req.Get(this.Host+path, ctx, this.getAuthorizationHeader())
 	if err != nil {
 		return nil, err
 	}
@@ -34,9 +34,8 @@ func (this *EmqxClient) Get(path string, v ...interface{}) (map[string]interface
 	return data, nil
 }
 
-func (this *EmqxClient) Post(path string, v ...interface{}) (map[string]interface{}, error) {
-	v = append(v, this.getAuthorizationHeader())
-	response, err := req.Post(this.Host+path, v...)
+func (this *EmqxClient) Post(ctx context.Context, path string, params interface{}) (map[string]interface{}, error) {
+	response, err := req.Post(this.Host+path, ctx, this.getAuthorizationHeader(), req.BodyJSON(params))
 	if err != nil {
 		return nil, err
 	}
@@ -44,9 +43,8 @@ func (this *EmqxClient) Post(path string, v ...interface{}) (map[string]interfac
 	return this.parseSuccessResponse(response)
 }
 
-func (this *EmqxClient) Delete(path string, v ...interface{}) (map[string]interface{}, error) {
-	v = append(v, this.getAuthorizationHeader())
-	response, err := req.Delete(this.Host+path, v...)
+func (this *EmqxClient) Delete(ctx context.Context, path string) (map[string]interface{}, error) {
+	response, err := req.Delete(this.Host+path, ctx, this.getAuthorizationHeader())
 	if err != nil {
 		return nil, err
 	}

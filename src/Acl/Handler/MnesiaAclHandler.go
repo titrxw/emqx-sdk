@@ -3,7 +3,6 @@ package handler
 import (
 	"context"
 	"errors"
-	"github.com/imroc/req"
 	"github.com/titrxw/emqx-sdk/src/Acl/Entity"
 	"github.com/titrxw/emqx-sdk/src/Kernel"
 	"net/url"
@@ -27,18 +26,18 @@ func (this *MnesiaAclHandler) Set(ctx context.Context, entity *entity.AclEntity,
 
 	var err error
 	if entity.GetClientName() != "" {
-		_, err = this.Client.Post(path, req.BodyJSON(map[string]string{
+		_, err = this.Client.Post(ctx, path, map[string]string{
 			this.getAclClientKeyName(useClientIdType): entity.GetClientName(),
 			"topic":  entity.GetTopic(),
 			"action": string(entity.GetAction()),
 			"access": string(entity.GetAccess()),
-		}), ctx)
+		})
 	} else {
-		_, err = this.Client.Post(path, req.BodyJSON(map[string]string{
+		_, err = this.Client.Post(ctx, path, map[string]string{
 			"topic":  entity.GetTopic(),
 			"action": string(entity.GetAction()),
 			"access": string(entity.GetAccess()),
-		}), ctx)
+		})
 	}
 
 	if err != nil {
@@ -50,7 +49,7 @@ func (this *MnesiaAclHandler) Set(ctx context.Context, entity *entity.AclEntity,
 func (this *MnesiaAclHandler) Get(ctx context.Context, clientName string, clientIdType string) ([]*entity.AclEntity, error) {
 	var entityMap []*entity.AclEntity
 	path := "api/v4/acl/" + clientIdType + "/" + clientName
-	data, err := this.Client.Get(path, ctx)
+	data, err := this.Client.Get(ctx, path)
 	if err != nil {
 		return entityMap, err
 	}
@@ -79,7 +78,7 @@ func (this *MnesiaAclHandler) Delete(ctx context.Context, entity *entity.AclEnti
 		operateType = this.getAclClientKeyName(useClientIdType) + "/" + entity.GetClientName()
 	}
 	path := "api/v4/acl/" + operateType + "/topic/" + url.QueryEscape(entity.GetTopic())
-	_, err := this.Client.Delete(path, ctx)
+	_, err := this.Client.Delete(ctx, path)
 	if err != nil {
 		return false, err
 	}

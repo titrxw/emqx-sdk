@@ -2,7 +2,6 @@ package mqtt
 
 import (
 	"context"
-	"github.com/imroc/req"
 	kernel "github.com/titrxw/emqx-sdk/src/Kernel"
 )
 
@@ -11,13 +10,13 @@ type Message struct {
 }
 
 func (this *Message) Publish(ctx context.Context, topic string, clientId string, payload string, qos int, retain bool) (bool, error) {
-	_, err := this.Client.Post("api/v4/mqtt/publish", req.BodyJSON(map[string]interface{}{
+	_, err := this.Client.Post(ctx, "api/v4/mqtt/publish", map[string]interface{}{
 		"topic":    topic,
 		"clientid": clientId,
 		"payload":  payload,
 		"qos":      qos,
 		"retain":   retain,
-	}), ctx)
+	})
 	if err != nil {
 		return false, err
 	}

@@ -6,7 +6,8 @@ import (
 )
 
 type OpenApiFactory struct {
-	client *kernel.EmqxClient
+	client     *kernel.EmqxClient
+	messageApi *mqtt.Message
 }
 
 func NewOpenApiFactory(client *kernel.EmqxClient) *OpenApiFactory {
@@ -16,9 +17,13 @@ func NewOpenApiFactory(client *kernel.EmqxClient) *OpenApiFactory {
 }
 
 func (this *OpenApiFactory) Message() *mqtt.Message {
-	return &mqtt.Message{
-		OpenApiAbstract: kernel.OpenApiAbstract{
-			Client: this.client,
-		},
+	if this.messageApi == nil {
+		this.messageApi = &mqtt.Message{
+			OpenApiAbstract: kernel.OpenApiAbstract{
+				Client: this.client,
+			},
+		}
 	}
+
+	return this.messageApi
 }

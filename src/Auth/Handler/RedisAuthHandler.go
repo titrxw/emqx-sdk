@@ -23,7 +23,7 @@ func NewRedisAuthHandler(redis *redis.Client, clientKeyPrefix string) *RedisAuth
 	}
 }
 
-func (this *RedisAuthHandler) Set(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
+func (this *RedisAuthHandler) Set(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) error {
 	var boolCmd *redis.BoolCmd
 	if entity.GetSalt() == "" {
 		boolCmd = this.redis.HMSet(ctx, this.clientKeyPrefix+entity.GetClientName(), "password", entity.GetPassword())
@@ -31,21 +31,19 @@ func (this *RedisAuthHandler) Set(ctx context.Context, entity *entity.AuthEntity
 		boolCmd = this.redis.HMSet(ctx, this.clientKeyPrefix+entity.GetClientName(), "password", entity.GetPassword(), "salt", entity.GetSalt())
 	}
 
-	return boolCmd.Val(), boolCmd.Err()
+	return boolCmd.Err()
 }
 
-func (this *RedisAuthHandler) Validate(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
+func (this *RedisAuthHandler) Validate(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) error {
 	sliceCmd := this.redis.HMGet(ctx, this.clientKeyPrefix+entity.GetClientName(), "password")
-	if sliceCmd.Err() != nil {
-		return false, sliceCmd.Err()
-	}
 
-	return sliceCmd.Val()[0] == entity.GetPassword(), nil
+	return sliceCmd.Err()
 }
 
-func (this *RedisAuthHandler) Delete(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
+func (this *RedisAuthHandler) Delete(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) error {
 	intCmd := this.redis.Del(ctx, this.clientKeyPrefix+entity.GetClientName())
-	return true, intCmd.Err()
+
+	return intCmd.Err()
 }
 
 func (this *RedisAuthHandler) ExportConfig(useClientIdType bool) string {

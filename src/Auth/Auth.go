@@ -20,7 +20,7 @@ func NewAuth(handler handler.AuthHandlerInterface, encrypt encrypt.EncryptInterf
 	}
 }
 
-func (this *Auth) Set(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
+func (this *Auth) Set(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) error {
 	if this.encrypt != nil {
 		entity.SetPassword(this.encrypt.Encode(entity.GetPassword(), entity.GetSalt()))
 	}
@@ -28,7 +28,7 @@ func (this *Auth) Set(ctx context.Context, entity *entity.AuthEntity, useClientI
 	return this.handler.Set(ctx, entity, useClientIdType)
 }
 
-func (this *Auth) Validate(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
+func (this *Auth) Validate(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) error {
 	if this.encrypt != nil {
 		entity.SetPassword(this.encrypt.Encode(entity.GetPassword(), entity.GetSalt()))
 	}
@@ -36,7 +36,7 @@ func (this *Auth) Validate(ctx context.Context, entity *entity.AuthEntity, useCl
 	return this.handler.Validate(ctx, entity, useClientIdType)
 }
 
-func (this *Auth) Delete(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
+func (this *Auth) Delete(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) error {
 	return this.handler.Delete(ctx, entity, useClientIdType)
 }
 

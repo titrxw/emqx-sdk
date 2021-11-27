@@ -23,9 +23,10 @@ func NewRedisAclHandler(redis *redis.Client, clientKeyPrefix string) *RedisAclHa
 	}
 }
 
-func (this *RedisAclHandler) Set(ctx context.Context, entity *entity.AclEntity, useClientIdType bool) (bool, error) {
+func (this *RedisAclHandler) Set(ctx context.Context, entity *entity.AclEntity, useClientIdType bool) error {
 	intCmd := this.redis.HSet(ctx, this.clientKeyPrefix+entity.GetClientName(), entity.GetTopic(), string(entity.GetAction()))
-	return intCmd.Val() > 0, intCmd.Err()
+
+	return intCmd.Err()
 }
 
 func (this *RedisAclHandler) Get(ctx context.Context, clientName string, clientIdType string) ([]*entity.AclEntity, error) {
@@ -48,9 +49,10 @@ func (this *RedisAclHandler) Get(ctx context.Context, clientName string, clientI
 	return entityMap, nil
 }
 
-func (this *RedisAclHandler) Delete(ctx context.Context, entity *entity.AclEntity, useClientIdType bool) (bool, error) {
+func (this *RedisAclHandler) Delete(ctx context.Context, entity *entity.AclEntity, useClientIdType bool) error {
 	intCmd := this.redis.HDel(ctx, this.clientKeyPrefix+entity.GetClientName(), entity.GetTopic())
-	return true, intCmd.Err()
+
+	return intCmd.Err()
 }
 
 func (this *RedisAclHandler) ExportConfig(useClientIdType bool) string {

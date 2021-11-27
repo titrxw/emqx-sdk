@@ -19,8 +19,8 @@ func TestRedisAclAdd(t *testing.T) {
 		entity.SetTopic("/sdf/sdfsdf")
 		entity.SetAccessAllow()
 		entity.SetActionPub()
-		result, err := aclHandler.Set(ctx, entity, true)
-		if !result || err != nil {
+		err := aclHandler.Set(ctx, entity, true)
+		if err != nil {
 			t.Failed()
 		}
 		t.Skipped()
@@ -38,8 +38,8 @@ func TestRedisAclDelete(t *testing.T) {
 		entity.SetTopic("/sdf/sdfsdf")
 		entity.SetAccessAllow()
 		entity.SetActionPub()
-		result, err := aclHandler.Delete(ctx, entity, true)
-		if !result || err != nil {
+		err := aclHandler.Delete(ctx, entity, true)
+		if err != nil {
 			t.Failed()
 		}
 		t.Skipped()
@@ -57,8 +57,8 @@ func TestMnesiaAclAdd(t *testing.T) {
 		entity.SetTopic("/sdf/sdfsdf")
 		entity.SetAccessAllow()
 		entity.SetActionPub()
-		result, err := aclHandler.Set(ctx, entity, true)
-		if !result || err != nil {
+		err := aclHandler.Set(ctx, entity, true)
+		if err != nil {
 			t.Failed()
 		}
 		t.Skipped()
@@ -76,8 +76,8 @@ func TestMnesiaAclDelete(t *testing.T) {
 		entity.SetTopic("/sdf/sdfsdf")
 		entity.SetAccessAllow()
 		entity.SetActionPub()
-		result, err := aclHandler.Delete(ctx, entity, true)
-		if !result || err != nil {
+		err := aclHandler.Delete(ctx, entity, true)
+		if err != nil {
 			t.Failed()
 		}
 		t.Skipped()

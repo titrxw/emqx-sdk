@@ -6,8 +6,8 @@ import (
 )
 
 type AuthHandlerInterface interface {
-	Set(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error)
-	Validate(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error)
-	Delete(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error)
+	Set(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) error
+	Validate(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) error
+	Delete(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) error
 	ExportConfig(useClientIdType bool) string
 }

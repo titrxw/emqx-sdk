@@ -17,8 +17,8 @@ func TestRedisAuthAdd(t *testing.T) {
 		entity := new(entity2.AuthEntity)
 		entity.SetClientName("lens_z1vX8evgbwuMeb0gbban4GT32ub")
 		entity.SetPassword("sdfsdfsdf")
-		result, err := authHandler.Set(ctx, entity, true)
-		if !result || err != nil {
+		err := authHandler.Set(ctx, entity, true)
+		if err != nil {
 			t.Failed()
 		}
 		t.Skipped()
@@ -34,8 +34,8 @@ func TestRedisAuthDelete(t *testing.T) {
 		entity := new(entity2.AuthEntity)
 		entity.SetClientName("lens_z1vX8evgbwuMeb0gbban4GT32ub")
 		entity.SetPassword("sdfsdfsdf")
-		result, err := authHandler.Delete(ctx, entity, true)
-		if !result || err != nil {
+		err := authHandler.Delete(ctx, entity, true)
+		if err != nil {
 			t.Failed()
 		}
 		t.Skipped()
@@ -51,8 +51,8 @@ func TestMnesiaAuthAdd(t *testing.T) {
 		entity := new(entity2.AuthEntity)
 		entity.SetClientName("test")
 		entity.SetPassword("test")
-		result, err := authHandler.Set(ctx, entity, true)
-		if !result || err != nil {
+		err := authHandler.Set(ctx, entity, true)
+		if err != nil {
 			t.Failed()
 		}
 		t.Skipped()
@@ -67,8 +67,8 @@ func TestMnesiaAuthDelete(t *testing.T) {
 		authHandler := auth.NewAuth(handler, nil)
 		entity := new(entity2.AuthEntity)
 		entity.SetClientName("test")
-		result, err := authHandler.Delete(ctx, entity, true)
-		if !result || err != nil {
+		err := authHandler.Delete(ctx, entity, true)
+		if err != nil {
 			t.Failed()
 		}
 		t.Skipped()

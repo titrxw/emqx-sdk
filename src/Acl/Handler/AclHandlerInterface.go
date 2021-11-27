@@ -6,8 +6,8 @@ import (
 )
 
 type AclHandlerInterface interface {
-	Set(ctx context.Context, entity *entity.AclEntity, useClientIdType bool) (bool, error)
+	Set(ctx context.Context, entity *entity.AclEntity, useClientIdType bool) error
 	Get(ctx context.Context, clientName string, clientIdType string) ([]*entity.AclEntity, error)
-	Delete(ctx context.Context, entity *entity.AclEntity, useClientIdType bool) (bool, error)
+	Delete(ctx context.Context, entity *entity.AclEntity, useClientIdType bool) error
 	ExportConfig(useClientIdType bool) string
 }

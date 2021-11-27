@@ -20,50 +20,45 @@ func NewMnesiaAuthHandler(client *kernel.EmqxClient) *MnesiaAuthHandler {
 	}
 }
 
-func (this *MnesiaAuthHandler) Set(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
+func (this *MnesiaAuthHandler) Set(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) error {
 	path := "api/v4/auth_" + this.getAuthClientKeyName(useClientIdType)
 
 	_, err := this.Client.Post(ctx, path, map[string]string{
 		this.getAuthClientKeyName(useClientIdType): entity.GetClientName(),
 		"password": entity.GetPassword(),
 	})
-	if err != nil {
-		return false, err
-	}
-	return true, err
+
+	return err
 }
 
-func (this *MnesiaAuthHandler) Validate(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
+func (this *MnesiaAuthHandler) Validate(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) error {
 	path := "api/v4/auth_" + this.getAuthClientKeyName(useClientIdType) + "/" + entity.GetClientName()
 	data, err := this.Client.Get(ctx, path)
 	if err != nil {
-		return false, err
+		return err
 	}
 
 	_, exists := data["data"]
 	if !exists {
-		return false, errors.New("emqx 响应数据异常")
+		return errors.New("emqx 响应数据异常")
 	}
 	content := data["data"].(map[string]string)
 	_, exists = content["password"]
 	if !exists {
-		return false, errors.New("emqx 响应数据异常")
+		return errors.New("emqx 响应数据异常")
 	}
 	if content["password"] != entity.GetPassword() {
-		return false, errors.New("密码错误")
+		return errors.New("密码错误")
 	}
 
-	return true, nil
+	return nil
 }
 
-func (this *MnesiaAuthHandler) Delete(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) (bool, error) {
+func (this *MnesiaAuthHandler) Delete(ctx context.Context, entity *entity.AuthEntity, useClientIdType bool) error {
 	path := "api/v4/auth_" + this.getAuthClientKeyName(useClientIdType) + "/" + entity.GetClientName()
 	_, err := this.Client.Delete(ctx, path)
-	if err != nil {
-		return false, err
-	}
 
-	return true, err
+	return err
 }
 
 func (this *MnesiaAuthHandler) getAuthClientKeyName(useClientIdType bool) string {

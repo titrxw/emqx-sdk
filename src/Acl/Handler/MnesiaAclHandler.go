@@ -21,7 +21,7 @@ func NewMnesiaAclHandler(client *kernel.EmqxClient) *MnesiaAclHandler {
 	}
 }
 
-func (this *MnesiaAclHandler) Set(ctx context.Context, entity *entity.AclEntity, useClientIdType bool) (bool, error) {
+func (this *MnesiaAclHandler) Set(ctx context.Context, entity *entity.AclEntity, useClientIdType bool) error {
 	path := "api/v4/acl"
 
 	var err error
@@ -40,10 +40,7 @@ func (this *MnesiaAclHandler) Set(ctx context.Context, entity *entity.AclEntity,
 		})
 	}
 
-	if err != nil {
-		return false, err
-	}
-	return true, err
+	return err
 }
 
 func (this *MnesiaAclHandler) Get(ctx context.Context, clientName string, clientIdType string) ([]*entity.AclEntity, error) {
@@ -72,18 +69,15 @@ func (this *MnesiaAclHandler) Get(ctx context.Context, clientName string, client
 	return entityMap, nil
 }
 
-func (this *MnesiaAclHandler) Delete(ctx context.Context, entity *entity.AclEntity, useClientIdType bool) (bool, error) {
+func (this *MnesiaAclHandler) Delete(ctx context.Context, entity *entity.AclEntity, useClientIdType bool) error {
 	var operateType = "$all"
 	if entity.GetClientName() != "" {
 		operateType = this.getAclClientKeyName(useClientIdType) + "/" + entity.GetClientName()
 	}
 	path := "api/v4/acl/" + operateType + "/topic/" + url.QueryEscape(entity.GetTopic())
 	_, err := this.Client.Delete(ctx, path)
-	if err != nil {
-		return false, err
-	}
 
-	return true, err
+	return err
 }
 
 func (this *MnesiaAclHandler) getAclClientKeyName(useClientIdType bool) string {

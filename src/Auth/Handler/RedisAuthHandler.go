@@ -2,17 +2,17 @@ package handler
 
 import (
 	"context"
-	"github.com/go-redis/redis/v8"
+	"github.com/redis/go-redis/v9"
 	"github.com/titrxw/emqx-sdk/src/Auth/Entity"
 )
 
 type RedisAuthHandler struct {
 	AuthHandlerAbstract
-	redis           *redis.Client
+	redis           redis.Cmdable
 	clientKeyPrefix string
 }
 
-func NewRedisAuthHandler(redis *redis.Client, clientKeyPrefix string) *RedisAuthHandler {
+func NewRedisAuthHandler(redis redis.Cmdable, clientKeyPrefix string) *RedisAuthHandler {
 	if clientKeyPrefix == "" {
 		clientKeyPrefix = "mqtt:emqx:user:"
 	}

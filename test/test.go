@@ -1,7 +1,7 @@
 package gotest
 
 import (
-	"github.com/go-redis/redis/v8"
+	"github.com/redis/go-redis/v9"
 	kernel "github.com/titrxw/emqx-sdk/src/Kernel"
 )
 

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/go-redis/redis/v8"
+	"github.com/redis/go-redis/v9"
 	acl "github.com/titrxw/emqx-sdk/src/Acl"
 	handler2 "github.com/titrxw/emqx-sdk/src/Acl/Handler"
 	auth "github.com/titrxw/emqx-sdk/src/Auth"

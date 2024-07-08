@@ -2,17 +2,17 @@ package handler
 
 import (
 	"context"
-	"github.com/go-redis/redis/v8"
+	"github.com/redis/go-redis/v9"
 	"github.com/titrxw/emqx-sdk/src/Acl/Entity"
 )
 
 type RedisAclHandler struct {
 	AclHandlerAbstract
-	redis           *redis.Client
+	redis           redis.Cmdable
 	clientKeyPrefix string
 }
 
-func NewRedisAclHandler(redis *redis.Client, clientKeyPrefix string) *RedisAclHandler {
+func NewRedisAclHandler(redis redis.Cmdable, clientKeyPrefix string) *RedisAclHandler {
 	if clientKeyPrefix == "" {
 		clientKeyPrefix = "mqtt:emqx:acl:"
 	}
@@ -23,8 +23,17 @@ func NewRedisAclHandler(redis *redis.Client, clientKeyPrefix string) *RedisAclHa
 	}
 }
 
-func (this *RedisAclHandler) Set(ctx context.Context, entity *entity.AclEntity, useClientIdType bool) error {
-	intCmd := this.redis.HSet(ctx, this.clientKeyPrefix+entity.GetClientName(), entity.GetTopic(), string(entity.GetAction()))
+func (this *RedisAclHandler) Set(ctx context.Context, aclEntity *entity.AclEntity, useClientIdType bool) error {
+	permission := ""
+	switch aclEntity.GetAction() {
+	case entity.ACTION_SUB:
+		permission = "1"
+	case entity.ACTION_PUB:
+		permission = "2"
+	case entity.ACTION_PUBSUB:
+		permission = "3"
+	}
+	intCmd := this.redis.HSet(ctx, this.clientKeyPrefix+aclEntity.GetClientName(), aclEntity.GetTopic(), permission)
 
 	return intCmd.Err()
 }
@@ -40,7 +49,17 @@ func (this *RedisAclHandler) Get(ctx context.Context, clientName string, clientI
 		aclEntity := new(entity.AclEntity)
 		aclEntity.SetClientName(clientName)
 		aclEntity.SetTopic(k)
-		aclEntity.SetAction(entity.ACL_ACTION(v))
+		action := entity.ACL_ACTION("")
+		switch v {
+		case "1":
+			action = entity.ACTION_SUB
+		case "2":
+			action = entity.ACTION_PUB
+		case "3":
+			action = entity.ACTION_PUBSUB
+
+		}
+		aclEntity.SetAction(action)
 		aclEntity.SetAccessAllow()
 
 		entityMap = append(entityMap, aclEntity)
